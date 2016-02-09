@@ -1,14 +1,146 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Hello World!</title>
-	 <script src="lib/psd.min.js"></script>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using node.js <script>document.write(process.version)</script>.
-  </body>
-  <script>
-  
-  </script>
+	<head>
+		<title>character-creator</title>
+		<script src="lib/psd.min.js"></script>
+		<style>
+			@font-face
+			{
+				font-family: myFirstFont;
+				src: url(fonts/RobotoCondensed-Regular.ttf)
+			}
+		
+		
+			body {
+				font-family: myFirstFont;
+				margin: 0;
+			}
+		
+			.drop-target {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				transition: all 0.2s;
+				background-color: #B99C91;
+			}
+			
+			.drop-target.dragging {
+				background-color: #D45757;
+				transition: all 0.2s;
+			}
+			
+			.background {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+			}
+			
+			.drop-target .background {
+				overflow:hidden;
+				background-color: #7AD27A;
+				border-radius: 50%;
+				width: 80%;
+				height: 80%;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%,-50%) scale(1);
+				transition: all 0.5s;
+			}
+			
+			.drop-target.dragging .background {
+				background-color: #47EC8F;
+				transform: translate(-50%,-50%) scale(1.1);
+				transition: all 0.2s;
+			}
+			
+			.drop-target .info
+			{
+				display: block;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%,-50%) scale(1);
+				color: white;
+				font-size: 20px;
+				transition: all 0.5s;
+			}
+			
+			.drop-target.dragging .info {
+				color: black;
+				transform: translate(-50%,-50%) scale(1.2);
+				transition: all 0.2s;
+			}
+		</style>
+	</head>
+	<body>
+		<span class="drop-target" id="drop-target">
+			<span class="background">
+			</span>
+			<span class="info">
+				Drag your PSD into this space.
+			</span>
+		</span>
+	</body>
+	<script>
+	
+		//Same as $(document).ready();
+		function ready(fn) {
+		  if (document.readyState != 'loading'){
+			 fn();
+		  } else {
+			 document.addEventListener('DOMContentLoaded', fn);
+		  }
+		}
+		
+
+		//When the page has loaded, run this code
+		ready(function() {
+		
+			// prevent default behavior from changing page on dropped file
+			window.ondragover = function(e) { e.preventDefault(); return false };
+			window.ondrop = function(e) { e.preventDefault(); return false };
+
+			var dropTarget = document.getElementById('drop-target');
+			dropTarget.ondragover = function () { 
+				this.className = 'drop-target dragging';
+				return false; 
+			};
+			
+			dropTarget.ondragleave = function () { 
+				this.className = 'drop-target';
+				return false; 
+			};
+			
+			dropTarget.ondrop = function (e) {
+				e.preventDefault();
+
+				for (var i = 0; i < e.dataTransfer.files.length; ++i) {
+					var path = e.dataTransfer.files[i].path;
+					if(path.toLowerCase().endsWith(".psd"))
+					{
+						alert("a psd");
+					}
+					else
+					{
+						alert("not a psd");
+					}
+				}
+				
+				return false;
+			};
+			
+		});
+		
+		window.ondragover = function(e) { e.preventDefault(); return false };
+		 window.ondrop = function(e) { e.preventDefault(); return false };
+	
+		function addDebugElement(content)
+		{
+			var element = document.createElement('p');
+			element.innerHTML = content;
+			document.body.appendChild(element);
+		}
+	</script>
 </html>
